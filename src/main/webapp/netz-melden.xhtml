@@ -1,0 +1,59 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="inhalt">
+        <h2>Geisternetz melden</h2>
+
+        <h:form id="meldeForm">
+            <p:panelGrid columns="2" layout="grid"
+                         columnClasses="ui-grid-col-4,ui-grid-col-8"
+                         style="max-width: 600px;">
+
+                <p:outputLabel for="breitengrad" value="Breitengrad"/>
+                <p:inputNumber id="breitengrad" value="#{netzMeldenBean.breitengrad}"
+                               required="true" requiredMessage="Breitengrad ist erforderlich."
+                               decimalPlaces="6" minValue="-90" maxValue="90"/>
+
+                <p:outputLabel for="laengengrad" value="Laengengrad"/>
+                <p:inputNumber id="laengengrad" value="#{netzMeldenBean.laengengrad}"
+                               required="true" requiredMessage="Laengengrad ist erforderlich."
+                               decimalPlaces="6" minValue="-180" maxValue="180"/>
+
+                <p:outputLabel for="groesse" value="Geschaetzte Groesse in qm"/>
+                <p:inputNumber id="groesse" value="#{netzMeldenBean.geschaetzteGroesse}"
+                               decimalPlaces="1" minValue="0"/>
+
+                <p:outputLabel for="anonym" value="Anonym melden"/>
+                <p:selectBooleanCheckbox id="anonym" value="#{netzMeldenBean.anonym}">
+                    <p:ajax update="kontaktBereich"/>
+                </p:selectBooleanCheckbox>
+            </p:panelGrid>
+
+            <h:panelGroup id="kontaktBereich" layout="block" style="max-width: 600px;">
+                <p:panelGrid columns="2" layout="grid"
+                             columnClasses="ui-grid-col-4,ui-grid-col-8"
+                             rendered="#{not netzMeldenBean.anonym}">
+
+                    <p:outputLabel for="name" value="Name"/>
+                    <p:inputText id="name" value="#{netzMeldenBean.name}"
+                                 required="#{not netzMeldenBean.anonym}"
+                                 requiredMessage="Name ist erforderlich."/>
+
+                    <p:outputLabel for="telefon" value="Telefonnummer"/>
+                    <p:inputText id="telefon" value="#{netzMeldenBean.telefonnummer}"
+                                 required="#{not netzMeldenBean.anonym}"
+                                 requiredMessage="Telefonnummer ist erforderlich."/>
+                </p:panelGrid>
+            </h:panelGroup>
+
+            <p:messages id="fehler" showDetail="false" closable="true"/>
+
+            <p:commandButton value="Melden" action="#{netzMeldenBean.melden}"
+                             update="@form meldungen" style="margin-top: 15px;"/>
+        </h:form>
+    </ui:define>
+</ui:composition>

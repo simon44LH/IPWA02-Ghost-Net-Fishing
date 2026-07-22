@@ -1,0 +1,44 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="inhalt">
+        <h2>Noch zu bergende Geisternetze</h2>
+
+        <h:form>
+            <p:dataTable value="#{offeneNetzeBean.offeneNetze}" var="netz"
+                         emptyMessage="Aktuell sind keine offenen Netze erfasst.">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{netz.id}"/>
+                </p:column>
+
+                <p:column headerText="Breitengrad">
+                    <h:outputText value="#{netz.breitengrad}"/>
+                </p:column>
+
+                <p:column headerText="Laengengrad">
+                    <h:outputText value="#{netz.laengengrad}"/>
+                </p:column>
+
+                <p:column headerText="Groesse in qm">
+                    <h:outputText value="#{netz.geschaetzteGroesse}"/>
+                </p:column>
+
+                <p:column headerText="Status">
+                    <h:outputText value="#{netz.status.bezeichnung}"/>
+                </p:column>
+
+                <p:column headerText="Bergende Person">
+                    <h:outputText value="#{netz.bergendePerson.name}"/>
+                </p:column>
+            </p:dataTable>
+
+            <p style="margin-top: 15px;">
+                <h:link outcome="/netz-uebersicht" value="Zur Verwaltung wechseln"/>
+            </p>
+        </h:form>
+    </ui:define>
+</ui:composition>
