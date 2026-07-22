@@ -4,6 +4,7 @@ import de.iu.ghostnet.dao.GeisternetzDAO;
 import de.iu.ghostnet.dao.PersonDAO;
 import de.iu.ghostnet.entity.BergendePerson;
 import de.iu.ghostnet.entity.Geisternetz;
+import de.iu.ghostnet.entity.MeldendePerson;
 import de.iu.ghostnet.entity.NetzStatus;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -78,15 +79,41 @@ public class NetzUebersichtBean implements Serializable {
     }
 
     public String alsVerschollenMelden(Geisternetz netz) {
-        if (neuerPersonName == null || neuerPersonName.isBlank()) {
+        boolean vorhandenGewaehlt = ausgewaehltePersonId != null;
+        boolean neueAngegeben = neuerPersonName != null && !neuerPersonName.isBlank();
+        boolean personBereitsAmNetz = netz.getBergendePerson() != null
+                || netz.getMeldendePerson() != null;
+
+        if (!vorhandenGewaehlt && !neueAngegeben && !personBereitsAmNetz) {
             meldung(FacesMessage.SEVERITY_WARN,
-                    "Verschollen-Meldungen sind nicht anonym moeglich. Bitte Namen angeben.");
+                    "Verschollen-Meldungen sind nicht anonym moeglich. "
+                    + "Bitte eine Person auswaehlen oder anlegen.");
             return null;
         }
+
+        MeldendePerson melder = null;
+        if (neueAngegeben) {
+            melder = new MeldendePerson();
+            melder.setName(neuerPersonName);
+            melder.setTelefonnummer(neuerPersonTelefon);
+            personDAO.speichern(melder);
+        } else if (vorhandenGewaehlt) {
+            BergendePerson gewaehlt = personDAO.findeBergendeNachId(ausgewaehltePersonId);
+            melder = new MeldendePerson();
+            melder.setName(gewaehlt.getName());
+            melder.setTelefonnummer(gewaehlt.getTelefonnummer());
+            personDAO.speichern(melder);
+        }
+
+        if (melder != null && netz.getMeldendePerson() == null) {
+            netz.setMeldendePerson(melder);
+        }
+
         netz.setStatus(NetzStatus.VERSCHOLLEN);
         geisternetzDAO.speichern(netz);
         meldung(FacesMessage.SEVERITY_INFO, "Geisternetz als verschollen vermerkt.");
         neuerPersonName = null;
+        neuerPersonTelefon = null;
         laden();
         return null;
     }

@@ -49,7 +49,7 @@
                     <h:outputText value="#{netz.geschaetzteGroesse}"/>
                 </p:column>
 
-                <p:column headerText="Status">
+                <p:column headerText="Status" style="min-width: 130px;">
                     <h:outputText value="#{netz.status.bezeichnung}"/>
                 </p:column>
 
@@ -61,21 +61,23 @@
                     <h:outputText value="#{netz.bergendePerson.name}"/>
                 </p:column>
 
-                <p:column headerText="Aktionen" style="width: 320px;">
-                    <p:commandButton value="Bergung uebernehmen"
-                                     action="#{netzUebersichtBean.fuerBergungEintragen(netz)}"
-                                     rendered="#{netzUebersichtBean.istBergbar(netz)}"
-                                     update="@form meldungen" style="margin-right: 5px;"/>
+                <p:column headerText="Aktionen" style="width: 160px;">
+                    <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start;">
+                        <p:commandButton value="Bergen"
+                                         action="#{netzUebersichtBean.fuerBergungEintragen(netz)}"
+                                         rendered="#{netzUebersichtBean.istBergbar(netz)}"
+                                         update="@form meldungen" style="width: 130px;"/>
 
-                    <p:commandButton value="Geborgen"
-                                     action="#{netzUebersichtBean.alsGeborgenMelden(netz)}"
-                                     rendered="#{netzUebersichtBean.istGeborgenMeldbar(netz)}"
-                                     update="@form meldungen" style="margin-right: 5px;"/>
+                        <p:commandButton value="Geborgen"
+                                         action="#{netzUebersichtBean.alsGeborgenMelden(netz)}"
+                                         rendered="#{netzUebersichtBean.istGeborgenMeldbar(netz)}"
+                                         update="@form meldungen" style="width: 130px;"/>
 
-                    <p:commandButton value="Verschollen"
-                                     action="#{netzUebersichtBean.alsVerschollenMelden(netz)}"
-                                     rendered="#{netzUebersichtBean.istVerschollenMeldbar(netz)}"
-                                     update="@form meldungen"/>
+                        <p:commandButton value="Verschollen"
+                                         action="#{netzUebersichtBean.alsVerschollenMelden(netz)}"
+                                         rendered="#{netzUebersichtBean.istVerschollenMeldbar(netz)}"
+                                         update="@form meldungen" style="width: 130px;"/>
+                    </div>
                 </p:column>
             </p:dataTable>
         </h:form>
